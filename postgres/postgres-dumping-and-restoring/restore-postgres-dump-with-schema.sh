@@ -1,3 +1,4 @@
+#!/bin/bash
 # Stellt Datenbank mit Daten und Schema wieder her
 # Vor dem Wiederherstellen werden alle Daten aus der Datenbank gelöscht
 # pg_restore kann NICHT mit 'plaintext' dumps arbeiten

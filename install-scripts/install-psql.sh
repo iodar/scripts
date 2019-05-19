@@ -1,3 +1,4 @@
+#!/bin/bash
 # installiert psql in der Version 10
 
 function install-psql-client-10 {

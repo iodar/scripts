@@ -1,3 +1,4 @@
+#!/bin/bash
 # Umgebungsname der im Namen des Outfiles benutzt wird
 # zum Beispiel qsdev oder qstest
 UMGEBUNGSNAME="test-stage"
