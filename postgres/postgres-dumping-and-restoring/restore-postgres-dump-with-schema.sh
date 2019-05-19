@@ -2,15 +2,15 @@
 # Vor dem Wiederherstellen werden alle Daten aus der Datenbank gelöscht
 # pg_restore kann NICHT mit 'plaintext' dumps arbeiten
 # Datenbankhost
-DATABASE_HOST_URI=lotos
+DATABASE_HOST_URI=localhost
 # Portnummer der Datenbank
 DATABASE_PORT=65432
 # Nutzer der Datenbank
-DATABASE_USER=dienstschnittstelle
+DATABASE_USER=postgres
 # Name der Datenbank
-DATABASE_NAME=dienstschnittstelle
+DATABASE_NAME=postgres
 # Dump File der importiert werden soll
-DUMP_IN_FILE=20190517171451-dienstschnittstelle-qsdev.dump.tar
+DUMP_IN_FILE=20190517171451-postgres-test-stage.dump.tar
 
 # Stellt Datenbankdaten aus dem IN FILE wieder her
 #
