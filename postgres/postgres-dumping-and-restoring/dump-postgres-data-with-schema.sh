@@ -6,7 +6,7 @@ CURRENT_DATETIME=$(date +'%Y%m%d%H%M%S')
 # URI zur Datenbank (URL)
 DATABASE_HOST_URI="localhost"
 # Portnummer der Datenbank
-DATABASE_PORT=30211
+DATABASE_PORT=5432
 # Name der Datenbank auf dem Datenbankserver
 DATABASE_NAME="postgres"
 # Nutzername für die Datenbank
