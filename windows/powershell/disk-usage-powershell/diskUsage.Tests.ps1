@@ -2,6 +2,7 @@
 $notEmptyFolderPath = ".\testdata\not-empty-folder"
 $emptyFolderPath = ".\testdata\empty-folder"
 
+# source script
 . .\diskUsage.ps1
 
 Describe "get-DiskUsageInBytes" {
