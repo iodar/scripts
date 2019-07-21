@@ -36,23 +36,20 @@ Describe "get-UsageInCustomUnit" {
         $sizeOfTestdataFolder | Should -BeExactly 68448
     }
 
-    It "unit 'BYTES' given => calculates size in bytes" {
-        $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath -unit "BYTES"
-        $sizeOfTestdataFolder | Should -BeExactly 68448
-    }
-    
-    It "unit 'KILO_BYTES' given => calculates size in Kbytes" {
-        $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath -unit "KILO_BYTES"
-        $sizeOfTestdataFolder | Should -BeExactly 67
-    }
-    
-    It "unit 'MEGA_BYTES' given => calculates size in Mbytes" {
-        $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath -unit "MEGA_BYTES"
-        $sizeOfTestdataFolder | Should -BeExactly 0
-    }
-    
-    It "unit 'GIGA_BYTES' given => calculates size in Gbytes" {
-        $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath -unit "GIGA_BYTES"
-        $sizeOfTestdataFolder | Should -BeExactly 0
+    Context "get Usage by unit" {
+        It "given -unit '<unit>', it should return exactly '<expectedValue>'" -TestCases @(
+            @{folder = $notEmptyFolderPath; unit = "BYTES"; expectedValue = 68448}
+            @{folder = $notEmptyFolderPath; unit = "KILO_BYTES"; expectedValue = 67}
+            @{folder = $notEmptyFolderPath; unit = "MEGA_BYTES"; expectedValue = 0}
+            @{folder = $notEmptyFolderPath; unit = "GIGA_BYTES"; expectedValue = 0}
+        ) {
+            param(
+                [string] $folder,
+                [string] $unit,
+                [string] $expectedValue
+            )
+            $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $folder -unit $unit
+            $sizeOfTestdataFolder | Should -BeExactly $expectedValue
+        }
     }
 }
