@@ -31,7 +31,7 @@ function get-UsageInCustomUnit {
 
         # custom unit for displaying the size of the current folder
         [Parameter(
-            Mandatory = $true,
+            Mandatory = $false,
             Position = 2
         )]
         [ValidateSet(

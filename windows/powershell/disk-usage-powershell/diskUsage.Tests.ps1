@@ -30,4 +30,29 @@ Describe "get-DiskUsageInBytes" {
     }
 }
 
-# TODO: add tests for get-UsageInCustomUnit
+Describe "get-UsageInCustomUnit" {
+    It "no unit given => prints size in bytes" {
+        $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath
+        $sizeOfTestdataFolder | Should -BeExactly 68448
+    }
+
+    It "unit 'BYTES' given => prints size in bytes" {
+        $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath -unit "BYTES"
+        $sizeOfTestdataFolder | Should -BeExactly 68448
+    }
+    
+    It "unit 'KILO_BYTES' given => prints size in Kbytes" {
+        $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath -unit "KILO_BYTES"
+        $sizeOfTestdataFolder | Should -BeExactly 67
+    }
+    
+    It "unit 'MEGA_BYTES' given => prints size in Mbytes" {
+        $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath -unit "MEGA_BYTES"
+        $sizeOfTestdataFolder | Should -BeExactly 0
+    }
+    
+    It "unit 'GIGA_BYTES' given => prints size in Gbytes" {
+        $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath -unit "GIGA_BYTES"
+        $sizeOfTestdataFolder | Should -BeExactly 0
+    }
+}
