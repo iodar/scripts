@@ -5,6 +5,19 @@ $emptyFolderPath = ".\testdata\empty-folder"
 # source script
 . .\diskUsage.ps1
 
+function Get-DiskUsageObject {
+    param(
+        [string] $path,
+        [long] $size
+    )
+
+    $props = @{
+        size = $size
+        path = $path
+    }
+    New-Object -TypeName psobject -Property $props
+}
+
 Describe "diskUsage script" {
     Describe "get-DiskUsageInBytes" {
         It "if folder not empty => calcs the correct amount of bytes in folder" {
@@ -33,16 +46,18 @@ Describe "diskUsage script" {
 
     Describe "get-UsageInCustomUnit" {
         It "no unit given => calculates size in bytes" {
+            # $expectedResult = Get-DiskUsageObject -path $notEmptyFolderPath -size 68448
+            $expectedResult = Get-DiskUsageObject -path $notEmptyFolderPath -size 68448
             $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $notEmptyFolderPath
-            $sizeOfTestdataFolder | Should -BeExactly 68448
+            $sizeOfTestdataFolder | Should -BeLikeExactly $expectedResult
         }
     
         Context "get Usage by unit" {
             It "given -unit '<unit>', it should return exactly '<expectedValue>'" -TestCases @(
-                @{folder = $notEmptyFolderPath; unit = "BYTES"; expectedValue = 68448 }
-                @{folder = $notEmptyFolderPath; unit = "KILO_BYTES"; expectedValue = 67 }
-                @{folder = $notEmptyFolderPath; unit = "MEGA_BYTES"; expectedValue = 0 }
-                @{folder = $notEmptyFolderPath; unit = "GIGA_BYTES"; expectedValue = 0 }
+                @{folder = $notEmptyFolderPath; unit = "BYTES"; expectedValue = Get-DiskUsageObject -path $notEmptyFolderPath -size 68448 }
+                @{folder = $notEmptyFolderPath; unit = "KILO_BYTES"; expectedValue = Get-DiskUsageObject -path $notEmptyFolderPath -size 67 }
+                @{folder = $notEmptyFolderPath; unit = "MEGA_BYTES"; expectedValue = Get-DiskUsageObject -path $notEmptyFolderPath -size 0 }
+                @{folder = $notEmptyFolderPath; unit = "GIGA_BYTES"; expectedValue = Get-DiskUsageObject -path $notEmptyFolderPath -size 0 }
             ) {
                 param(
                     [string] $folder,
@@ -50,7 +65,7 @@ Describe "diskUsage script" {
                     [string] $expectedValue
                 )
                 $sizeOfTestdataFolder = get-UsageInCustomUnit -folder $folder -unit $unit
-                $sizeOfTestdataFolder | Should -BeExactly $expectedValue
+                $sizeOfTestdataFolder | Should -BeLikeExactly $expectedValue
             }
         }
     }

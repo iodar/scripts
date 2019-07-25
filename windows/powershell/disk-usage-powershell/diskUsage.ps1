@@ -47,19 +47,25 @@ function get-UsageInCustomUnit {
     $initialSize = $(get-DiskUsageInBytes -folder $folder)
 
     New-Variable -Option Constant -Name KILO_BYTES -Value 1024
-    New-Variable -Option Constant -Name MEGA_BYTES -Value $($KILO_BYTES*1024)
-    New-Variable -Option Constant -Name GIGA_BYTES -Value $($MEGA_BYTES*1024)
+    New-Variable -Option Constant -Name MEGA_BYTES -Value $($KILO_BYTES * 1024)
+    New-Variable -Option Constant -Name GIGA_BYTES -Value $($MEGA_BYTES * 1024)
 
     $customSize = 0
 
     switch ($unit) {
-        "BYTES"         { $customSize = $initialSize; break }
-        "KILO_BYTES"    { $customSize = $initialSize/$KILO_BYTES; break }
-        "MEGA_BYTES"    { $customSize = $initialSize/$MEGA_BYTES; break }
-        "GIGA_BYTES"    { $customSize = $initialSize/$GIGA_BYTES; break }
-        Default         { $customSize = $initialSize; break }
+        "BYTES" { $customSize = $initialSize; break }
+        "KILO_BYTES" { $customSize = $initialSize / $KILO_BYTES; break }
+        "MEGA_BYTES" { $customSize = $initialSize / $MEGA_BYTES; break }
+        "GIGA_BYTES" { $customSize = $initialSize / $GIGA_BYTES; break }
+        Default { $customSize = $initialSize; break }
     }
-    return [math]::Round($customSize)
+
+    $diskUsageProperties = @{
+        size = [math]::Round($customSize)
+        path = $folder
+    }
+    
+    return New-Object -TypeName psobject -Property $diskUsageProperties
 }
 
-Write-Output "$(get-UsageInCustomUnit "E:\Programme" GIGA_BYTES)G`t."
+get-UsageInCustomUnit -folder . -unit KILO_BYTES
