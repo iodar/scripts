@@ -72,8 +72,8 @@ function Get-BestDisplaySize {
         [long] $sizeInBytes
     )
 
-    $done = $false
-    $power = 1
+    [bool] $done = $false
+    [int] $power = 1
 
     while ($done -ne $true) {
         $sizeInCustomFormat = ($sizeInBytes / [math]::Pow(1024, $power))
@@ -83,5 +83,22 @@ function Get-BestDisplaySize {
             $power++
         }
     }
-    return $($power-1)
+    return $power-1
+}
+
+enum Unit {
+    Bytes;
+    KBytes;
+    MBytes;
+    GBytes;
+    TBytes;
+    PBytes;
+}
+
+function Get-DisplayUnit {
+    param(
+        [int] $power
+    )
+    [Unit] $displayUnit = $power
+    return $displayUnit
 }

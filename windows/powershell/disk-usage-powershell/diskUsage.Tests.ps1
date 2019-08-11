@@ -1,9 +1,9 @@
+# import diskUsage module
+using module .\diskUsage.psd1
+
 # testdata
 $notEmptyFolderPath = ".\testdata\not-empty-folder"
 $emptyFolderPath = ".\testdata\empty-folder"
-
-# source script
-. .\diskUsage.ps1
 
 function Get-DiskUsageObject {
     param(
@@ -102,5 +102,23 @@ Describe "Get-BestDisplaySize" {
         )
         $powerOf1024 = Get-BestDisplaySize -sizeInBytes $bytes
         $powerOf1024 | Should -BeExactly $expectedReturn
+    }
+}
+
+Describe "Get-DisplayUnit" {
+    It "given power <power> => return should be <expectedDisplayUnit>" -TestCases @(
+        @{power = 0; expectedDisplayUnit = [Unit]::Bytes}
+        @{power = 1; expectedDisplayUnit = [Unit]::KBytes}
+        @{power = 2; expectedDisplayUnit = [Unit]::MBytes}
+        @{power = 3; expectedDisplayUnit = [Unit]::GBytes}
+        @{power = 4; expectedDisplayUnit = [Unit]::TBytes}
+        @{power = 5; expectedDisplayUnit = [Unit]::PBytes}
+    ) {
+        param(
+            [int] $power,
+            [Unit] $expectedDisplayUnit
+        )
+        [Unit] $displayUnit = Get-DisplayUnit -power $power
+        $displayUnit | Should -BeExactly $expectedDisplayUnit 
     }
 }
