@@ -11,11 +11,10 @@ function Get-DiskUsageObject {
         [long] $size
     )
 
-    $props = @{
+    return [PSCustomObject]@{
         size = $size
         path = $path
     }
-    New-Object -TypeName psobject -Property $props
 }
 
 Describe "diskUsage script" {
@@ -68,5 +67,12 @@ Describe "diskUsage script" {
                 $sizeOfTestdataFolder | Should -BeLikeExactly $expectedValue
             }
         }
+    }
+}
+
+Describe "Get-BestDisplaySize" {
+    It "given KBytes => return should be 1" {
+        $powerOf1024 = Get-BestDisplaySize -sizeInBytes 68448
+        $powerOf1024 | Should -BeExactly 1
     }
 }

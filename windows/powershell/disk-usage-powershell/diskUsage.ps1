@@ -60,12 +60,28 @@ function get-UsageInCustomUnit {
         Default { $customSize = $initialSize; break }
     }
 
-    $diskUsageProperties = @{
+    return  [PSCustomObject]@{
         size = [math]::Round($customSize)
         path = $folder
     }
-    
-    return New-Object -TypeName psobject -Property $diskUsageProperties
 }
 
-get-UsageInCustomUnit -folder . -unit KILO_BYTES
+function Get-BestDisplaySize {
+    param(
+        # initial size in bytes
+        [int] $sizeInBytes
+    )
+
+    $done = $false
+    $power = 1
+
+    while ($done -ne $true) {
+        $sizeInCustomFormat = ($sizeInBytes / [math]::Pow(1024, $power))
+        if ($sizeInCustomFormat -lt 1) {
+            $done = $true
+        } else {
+            $power++
+        }
+    }
+    return $($power-1)
+}
