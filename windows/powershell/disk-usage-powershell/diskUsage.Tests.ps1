@@ -71,8 +71,20 @@ Describe "diskUsage script" {
 }
 
 Describe "Get-BestDisplaySize" {
-    It "given KBytes => return should be 1" {
-        $powerOf1024 = Get-BestDisplaySize -sizeInBytes 68448
-        $powerOf1024 | Should -BeExactly 1
+    It "given <bytes> <unit>`t=> return should be <expectedReturn>" -TestCases @(
+        @{bytes = 68448; unit = "bytes"; expectedReturn = 1}
+        @{bytes = 168448; unit = "bytes"; expectedReturn = 1}
+        @{bytes = 268448; unit = "bytes"; expectedReturn = 1}
+        @{bytes = 1268448; unit = "bytes"; expectedReturn = 2}
+        @{bytes = 111268448; unit = "bytes"; expectedReturn = 2}
+        @{bytes = 1111268448; unit = "bytes"; expectedReturn = 3}
+    ) {
+        param(
+            [int] $bytes,
+            [string] $unit,
+            [int] $expectedReturn
+        )
+        $powerOf1024 = Get-BestDisplaySize -sizeInBytes $bytes
+        $powerOf1024 | Should -BeExactly $expectedReturn
     }
 }
