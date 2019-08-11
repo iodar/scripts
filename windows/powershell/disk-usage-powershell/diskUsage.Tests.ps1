@@ -122,3 +122,24 @@ Describe "Get-DisplayUnit" {
         $displayUnit | Should -BeExactly $expectedDisplayUnit 
     }
 }
+
+Describe "Get-DiskUsage" {
+    
+    # function Get-UsageObject (OptionalParameters) {
+        
+    # }
+
+    Mock Get-DiskUsageInBytes {
+        return [long] 12 * [math]::Pow(1024, 2)
+    }
+
+    It "should get right amount" {
+        $expectedResult = [PSCustomObject]@{
+            folder = "."
+            size = 84.59
+            unit = [Unit]::KBytes
+        }
+        $result = Get-DiskUsage
+        $result | Should -BeLike $expectedResult
+    }
+}

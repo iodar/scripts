@@ -2,7 +2,7 @@
 # small utility that allows to get the disk usage of the current folder
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-function get-DiskUsageInBytes {
+function Get-DiskUsageInBytes {
     param(
         # folder to be examined
         [Parameter(
@@ -12,14 +12,12 @@ function get-DiskUsageInBytes {
         [string]
         $folder = "."
     )
-    [long] $sizeOfFolder = 0
-    Get-ChildItem -Path $folder -Recurse | ForEach-Object {
-        $sizeOfFolder += $_.Length
-    }
+    $measuredFolderObject = Get-ChildItem -Path $folder -Recurse | Measure-Object -Property Length -Sum
+    [long] $sizeOfFolder = $measuredFolderObject.Sum -as [long]
     return $sizeOfFolder
 }
 
-function get-UsageInCustomUnit {
+function Get-UsageInCustomUnit {
     param (
         # folder to be examined
         [Parameter(
@@ -60,7 +58,7 @@ function get-UsageInCustomUnit {
         Default { $customSize = $initialSize; break }
     }
 
-    return  [PSCustomObject]@{
+    return [PSCustomObject]@{
         size = [math]::Round($customSize)
         path = $folder
     }
@@ -101,4 +99,24 @@ function Get-DisplayUnit {
     )
     [Unit] $displayUnit = $power
     return $displayUnit
+}
+
+function Get-DiskUsage {
+    param(
+        # folder to get the disk usage of
+        [Parameter(Position = 1, Mandatory = 0)]
+        [string]
+        $folder = "."
+    )
+    
+    [long] $folderSizeInBytes = Get-DiskUsageInBytes -folder $folder
+    $optimalPower = Get-BestDisplaySize -sizeInBytes $folderSizeInBytes
+    [Unit] $optimalUnit = Get-DisplayUnit -power $optimalPower
+    $folderSizeInCustomUnit = [System.Math]::Round(($folderSizeInBytes / [math]::Pow(1024, $optimalPower)), 2)
+
+    return [PSCustomObject]@{
+        folder = $folder
+        size = $folderSizeInCustomUnit
+        unit = $optimalUnit
+    }
 }
