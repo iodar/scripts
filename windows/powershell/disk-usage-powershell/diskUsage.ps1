@@ -12,7 +12,7 @@ function get-DiskUsageInBytes {
         [string]
         $folder = "."
     )
-    $sizeOfFolder = 0
+    [long] $sizeOfFolder = 0
     Get-ChildItem -Path $folder -Recurse | ForEach-Object {
         $sizeOfFolder += $_.Length
     }
@@ -44,7 +44,7 @@ function get-UsageInCustomUnit {
         $unit
     )
 
-    $initialSize = $(get-DiskUsageInBytes -folder $folder)
+    [long] $initialSize = $(get-DiskUsageInBytes -folder $folder)
 
     New-Variable -Option Constant -Name KILO_BYTES -Value 1024
     New-Variable -Option Constant -Name MEGA_BYTES -Value $($KILO_BYTES * 1024)
@@ -69,7 +69,7 @@ function get-UsageInCustomUnit {
 function Get-BestDisplaySize {
     param(
         # initial size in bytes
-        [int] $sizeInBytes
+        [long] $sizeInBytes
     )
 
     $done = $false

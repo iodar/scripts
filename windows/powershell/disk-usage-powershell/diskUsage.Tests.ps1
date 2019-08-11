@@ -71,17 +71,32 @@ Describe "diskUsage script" {
 }
 
 Describe "Get-BestDisplaySize" {
-    # TODO: add edge cases (1 byte under 1 GiB, exactly 1 GiB, 1 byte over 1 GiB)
-    It "given <bytes> <unit>`t=> return should be <expectedReturn>" -TestCases @(
-        @{bytes = 68448; unit = "bytes"; expectedReturn = 1}
-        @{bytes = 168448; unit = "bytes"; expectedReturn = 1}
-        @{bytes = 268448; unit = "bytes"; expectedReturn = 1}
-        @{bytes = 1268448; unit = "bytes"; expectedReturn = 2}
-        @{bytes = 111268448; unit = "bytes"; expectedReturn = 2}
-        @{bytes = 1111268448; unit = "bytes"; expectedReturn = 3}
+    # test contants
+    $oneKByte = 1 * 1024
+    $oneMByte = $oneKByte * 1024
+    $oneGByte = $oneMByte * 1024
+    $oneTByte = $oneGByte * 1024
+    $onePByte = $oneTByte * 1024
+    
+    It "given <bytes> <unit> => return should be <expectedReturn>" -TestCases @(
+        @{bytes = $oneKByte-1; unit = "bytes"; expectedReturn = 0}
+        @{bytes = $oneKByte; unit = "bytes"; expectedReturn = 1}
+        @{bytes = $oneKByte+1; unit = "bytes"; expectedReturn = 1}
+        @{bytes = $oneMByte-1; unit = "bytes"; expectedReturn = 1}
+        @{bytes = $oneMByte; unit = "bytes"; expectedReturn = 2}
+        @{bytes = $oneMByte+1; unit = "bytes"; expectedReturn = 2}
+        @{bytes = $oneGByte-1; unit = "bytes"; expectedReturn = 2}
+        @{bytes = $oneGByte; unit = "bytes"; expectedReturn = 3}
+        @{bytes = $oneGByte+1; unit = "bytes"; expectedReturn = 3}
+        @{bytes = $oneTByte-1; unit = "bytes"; expectedReturn = 3}
+        @{bytes = $oneTByte; unit = "bytes"; expectedReturn = 4}
+        @{bytes = $oneTByte+1; unit = "bytes"; expectedReturn = 4}
+        @{bytes = $onePByte-1; unit = "bytes"; expectedReturn = 4}
+        @{bytes = $onePByte; unit = "bytes"; expectedReturn = 5}
+        @{bytes = $onePByte+1; unit = "bytes"; expectedReturn = 5}
     ) {
         param(
-            [int] $bytes,
+            [long] $bytes,
             [string] $unit,
             [int] $expectedReturn
         )
