@@ -71,7 +71,7 @@ Describe "diskUsage script" {
 }
 
 Describe "Get-BestDisplaySize" {
-    # TODO: added edge cases (1 byte under 1 GiB, exactly 1 GiB, 1 byte over 1 GiB)
+    # TODO: add edge cases (1 byte under 1 GiB, exactly 1 GiB, 1 byte over 1 GiB)
     It "given <bytes> <unit>`t=> return should be <expectedReturn>" -TestCases @(
         @{bytes = 68448; unit = "bytes"; expectedReturn = 1}
         @{bytes = 168448; unit = "bytes"; expectedReturn = 1}
