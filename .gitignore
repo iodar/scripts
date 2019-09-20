@@ -84,3 +84,4 @@ fabric.properties
 
 # python
 __pycache__/
+.pytest_cache/
