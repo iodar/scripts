@@ -55,6 +55,8 @@ function check-if-any-archive-exists() {
     else
         local RETURN=1
     fi
+
+    return $RETURN
 }
 
 # get sorted list of the archive files
@@ -82,8 +84,11 @@ function remove-all-elements-besides-first-n-elements() {
     # iterate over all elements in the list (backup archives)
     # exclude the first N elements to keep the newest N backup archives
     # remove all remainig elements
-    for element in $REMOVE_SEQ; do
-        rm ${LIST_OF_ELEMENTS[element]}
+    for ELEMENT in $REMOVE_SEQ; do
+        # normalise path of archive
+        ARCHIVE_FILE_NAME=${LIST_OF_ELEMENTS[ELEMENT]}
+        ARCHIVE_FULL_PATH="$ARCHIVES_PATH/$ARCHIVE_FILE_NAME"
+        rm $ARCHIVE_FULL_PATH
     done
 }
 
@@ -101,12 +106,10 @@ function main {
 
     if [[ $HELP_RUN -eq 1 ]] || ([[ -z ${NUMBER_OF_ELEMENTS:+x} ]] || [[ -z ${ARCHIVES_PATH:+x} ]]); then
         print-help
-    # FIXME: this is broken an needs to be fixed
-    elif [[ $(check-if-any-archive-exists "$ARCHIVES_PATH") -ne 0 ]]; then
+    elif [[ $(check-if-any-archive-exists "$ARCHIVES_PATH"; echo $?) -ne 0 ]]; then
             echo "No files with extension '$EXTENSION' found at $ARCHIVES_PATH"
         else
             remove-all-elements-besides-first-n-elements "$NUMBER_OF_ELEMENTS" "$ARCHIVES_PATH"
-        fi
     fi
 }
 
