@@ -49,7 +49,12 @@ function print-help() {
 function check-if-any-archive-exists() {
     local DIR="$1"
     # check if any archive file is found
-    local LS_EXIT_CODE=$(ls $DIR*$EXTENSION > /dev/null 2>&1; echo $?)
+    if [[ "$DIR" == "." ]]; then
+        local LS_EXIT_CODE="$(ls *$EXTENSION > /dev/null 2>&1; echo $?)"
+    else
+        local LS_EXIT_CODE="$(ls $DIR*$EXTENSION > /dev/null 2>&1; echo $?)"
+    fi
+
     if [[ $LS_EXIT_CODE -eq 0 ]]; then
         local RETURN=0
     else
@@ -77,6 +82,7 @@ function remove-all-elements-besides-first-n-elements() {
     local ARCHIVES_PATH="$2"
     # list of all archive files in the choosen directory
     LIST_OF_ELEMENTS=($(get-sorted-list-of-archives $ARCHIVES_PATH))
+    echo "List of archives: ${LIST_OF_ELEMENTS[@]}"
     # calculate the index of the last element (length of array minus 1)
     INDEX_LAST_ELEMENT=$(expr ${#LIST_OF_ELEMENTS[@]} - 1)
     # create sequence to iterate over
@@ -87,8 +93,7 @@ function remove-all-elements-besides-first-n-elements() {
     for ELEMENT in $REMOVE_SEQ; do
         # normalise path of archive
         ARCHIVE_FILE_NAME=${LIST_OF_ELEMENTS[ELEMENT]}
-        # ARCHIVE_FULL_PATH="$ARCHIVES_PATH/$ARCHIVE_FILE_NAME"
-        rm $ARCHIVE_FILE_NAME
+        echo "doing task: rm $ARCHIVE_FILE_NAME"
     done
 }
 
